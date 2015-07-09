@@ -1,0 +1,301 @@
+/**
+ * @file   onebox_common_pwr_mngr.c
+ * @author Jahnavi Meher
+ * @version 1.0
+ *
+ * @section LICENSE
+ *
+ * This software embodies materials and concepts that are confidential to Redpine
+ * Signals and is made available solely pursuant to the terms of a written license
+ * agreement with Redpine Signals
+ *
+ * @section DESCRIPTION
+ *
+ * The file contains the callbacks and functions that are required for handling
+ * power save across different protocols.
+ */
+
+/* include files */
+#include "onebox_common.h"
+#include "onebox_hal.h"
+#include "onebox_linux.h"
+#include "onebox_pktpro.h"
+
+static inline int protocol_tx_access(struct driver_assets *d_assets)
+{
+	uint8 ii = 0;
+	for (ii = 0; ii < MAX_IDS; ii++) {
+		if (d_assets->techs[ii].drv_state == MODULE_ACTIVE &&
+				d_assets->techs[ii].tx_intention)
+			return 1;
+	}
+	return 0;
+}
+
+
+#ifdef GPIO_HANDSHAKE
+
+/**
+ * gpio_host_tx_intention() - This function is called when the host GPIO value has changed.
+ *
+ * @gpio_value: The value of the host gpio.
+ *
+ * Return: None.
+ */
+void gpio_host_tx_intention(PONEBOX_ADAPTER adapter,bool gpio_value)
+{
+	struct driver_assets *d_assets = onebox_get_driver_asset();
+#ifndef USE_USB_INTF
+		struct mmc_host *host = adapter->pfunction->card->host;
+#endif
+	int counter = 0;
+
+	if (gpio_value) {
+//		printk("In %s %d setting host gpio high\n", __func__, __LINE__);		
+		adapter->os_intf_ops->onebox_set_host_status(gpio_value);
+REPEAT_CHECK:
+		if (!adapter->os_intf_ops->onebox_get_device_status()) { /* Device GPIO is low */
+			while(1) {
+				msleep(1);
+				if (adapter->os_intf_ops->onebox_get_device_status()) {
+					/* Once device GPIO is high, wait for 2 more milliseconds and
+					 * again read the status, if it is high then give tx_access 
+					 */
+					msleep(2);
+					if (adapter->os_intf_ops->onebox_get_device_status()) {
+
+#ifndef USE_USB_INTF
+						host->ops->set_ios(host, &host->ios);
+#endif
+						d_assets->common_hal_tx_access = true;
+//						printk("In %s Line %d cmn tx is %d\n", __func__, __LINE__, d_assets->common_hal_tx_access);
+						break;
+
+					}else
+						continue;
+					//TODO: add BT and ZB tx_access	
+
+				}
+
+				if(counter++ > 30) { 
+					printk("Device GPIO not high after 30ms\n");
+					printk("ERR: Stopping driver ops\n");
+					break;
+				}
+			}
+		} else { /* Device GPIO status is high */
+			msleep(2);
+			if (adapter->os_intf_ops->onebox_get_device_status()) {
+				d_assets->common_hal_tx_access = true;
+//				printk("In %s Line %d cmn tx is %d\n", __func__, __LINE__, d_assets->common_hal_tx_access);
+			} else {
+//				printk("In %s Line %d cmn tx is %d\n", __func__, __LINE__, d_assets->common_hal_tx_access);
+				goto REPEAT_CHECK;
+			}
+		}
+	} else {
+		adapter->os_intf_ops->onebox_set_host_status(gpio_value);
+//		printk("In %s %d setting host gpio low\n", __func__, __LINE__);		
+	}
+}
+
+#endif
+
+static void send_ulp_sleep_ack(PONEBOX_ADAPTER adapter)
+{
+	onebox_mac_frame_t *mgmt_frame;
+	netbuf_ctrl_block_t *netbuf_cb = NULL;
+	ONEBOX_STATUS status = ONEBOX_STATUS_SUCCESS;
+	struct driver_assets *d_assets = onebox_get_driver_asset();
+
+	FUNCTION_ENTRY(ONEBOX_ZONE_MGMT_SEND);
+
+	netbuf_cb = adapter->os_intf_ops->onebox_alloc_skb(FRAME_DESC_SZ);
+	if(netbuf_cb == NULL)
+	{            
+		ONEBOX_DEBUG(ONEBOX_ZONE_ERROR, (TEXT("%s: Unable to allocate skb\n"), __func__));
+		return;
+
+	}    
+	adapter->os_intf_ops->onebox_add_data_to_skb(netbuf_cb, FRAME_DESC_SZ);
+
+	mgmt_frame = (onebox_mac_frame_t *)&netbuf_cb->data[0];
+	adapter->os_intf_ops->onebox_memset(mgmt_frame, 0, FRAME_DESC_SZ);
+
+	ONEBOX_DEBUG(ONEBOX_ZONE_PWR_SAVE, (TEXT("In %s line %d \n"), __func__, __LINE__));
+	if (adapter->ulp_sleep_token == 0xABCD) {
+		printk("error \n");
+	}
+	mgmt_frame->desc_word[0] = ONEBOX_CPU_TO_LE16(0 << 12);
+	netbuf_cb->tx_pkt_type = COEX_Q;
+	mgmt_frame->desc_word[1] = ONEBOX_CPU_TO_LE16(CONFIRM); 
+	mgmt_frame->desc_word[6] = adapter->ulp_sleep_token;
+	mgmt_frame->desc_word[7] = ONEBOX_CPU_TO_LE16(ULP_SLEEP_NOTIFY << 8);
+
+	adapter->coex_osi_ops->onebox_dump(ONEBOX_ZONE_ERROR, (uint8 *)mgmt_frame, FRAME_DESC_SZ);
+	d_assets->ulp_sleep_ack_sent = true;
+	status = adapter->osi_host_intf_ops->onebox_host_intf_write_pkt(adapter,
+		                                                 netbuf_cb->data, 
+	                                                         netbuf_cb->len,
+	                                                         netbuf_cb->tx_pkt_type);
+	if (status != ONEBOX_STATUS_SUCCESS)                                 
+	{    
+		ONEBOX_DEBUG(ONEBOX_ZONE_ERROR,(TEXT
+					("%s: Failed To Write The Packet\n"),__func__));
+	}
+	adapter->tot_pkts_sentout[COEX_Q]++;
+	adapter->os_intf_ops->onebox_free_pkt(adapter, netbuf_cb, 0);
+	return;
+}
+/**
+ * sleep_entry_recvd() - This function is called when a sleep entry frame is recvd from fw.
+ *
+ * Return: None.
+ */
+void sleep_entry_recvd(PONEBOX_ADAPTER adapter)
+{
+	struct driver_assets *d_assets = onebox_get_driver_asset();
+	uint8 proto_id = 0;
+
+
+	printk("In %s %d\n", __func__, __LINE__);
+	adapter->os_intf_ops->onebox_acquire_sem(&d_assets->tx_access_lock, 0);
+	d_assets->sleep_entry_recvd = 1;
+	if (!protocol_tx_access(d_assets)) { /* checks if all active protocols have tx_access */
+		d_assets->common_hal_tx_access = false;
+		printk("In %s Line %d cmn tx is %d\n", __func__, __LINE__, d_assets->common_hal_tx_access);
+		send_ulp_sleep_ack(adapter);
+	} else {
+			printk("One of the protcol requested tx_acess\n");
+			d_assets->common_hal_tx_access = true;
+			d_assets->ulp_sleep_ack_sent = false;
+			while(proto_id < MAX_IDS) {
+					if (d_assets->techs[proto_id].deregister_flags 
+									&& (d_assets->techs[proto_id].drv_state == MODULE_ACTIVE)) {
+							d_assets->techs[proto_id].deregister_flags = 0;
+							printk("Waking up an event \n");
+							d_assets->techs[proto_id].tx_access = 1;
+							wake_up(&d_assets->techs[proto_id].deregister_event);
+					}
+					proto_id++;
+			}
+	}
+
+	adapter->os_intf_ops->onebox_release_sem(&d_assets->tx_access_lock);
+	return;
+}
+
+/**
+ * sleep_exit_recvd() - This function is called when a sleep exit frame is recvd from fw.
+ *
+ * Return: None.
+ */
+void sleep_exit_recvd(PONEBOX_ADAPTER adapter)
+{
+	struct driver_assets *d_assets = onebox_get_driver_asset();
+	uint8 proto_id = 0;
+
+	printk("In %s %d\n", __func__, __LINE__);
+	//acquire_lock();//TODO add mutex	
+	adapter->os_intf_ops->onebox_acquire_sem(&d_assets->tx_access_lock, 0);
+	d_assets->sleep_entry_recvd = 0;
+	d_assets->common_hal_tx_access = true;
+	d_assets->ulp_sleep_ack_sent = false;
+	adapter->os_intf_ops->onebox_release_sem(&d_assets->tx_access_lock);
+	while(proto_id < MAX_IDS) {
+		if (d_assets->techs[proto_id].deregister_flags 
+		    && (d_assets->techs[proto_id].drv_state == MODULE_ACTIVE)) {
+			d_assets->techs[proto_id].deregister_flags = 0;
+			printk("Waking up an event \n");
+			d_assets->techs[proto_id].tx_access = 1;
+			wake_up(&d_assets->techs[proto_id].deregister_event);
+		}
+		proto_id++;
+	}
+	//release lock
+	return;
+}
+
+
+/**
+ * update_tx_status() - This function is used to update the various sleep states
+ * 			based on the tx state of the all the active protocols with
+ * 			ps enabled.
+ *
+ * @proto_id: ID of the protocol that calls the function.
+ *
+ * Return: None.
+ */
+void update_tx_status(uint8 proto_id)
+{
+	struct driver_assets *d_assets = onebox_get_driver_asset();
+	PONEBOX_ADAPTER adapter = (PONEBOX_ADAPTER)d_assets->global_priv;
+
+	if (proto_id > 2) {
+		printk("ERR: invalid protocol id in %s %d\n", __func__, __LINE__);
+		return;
+	}
+
+	if (d_assets->techs[proto_id].drv_state == MODULE_REMOVED) {
+		printk("ERR: MODULE_REMOVED state %s %d proto_id %d\n", __func__, __LINE__, proto_id);
+		return;
+	}
+
+	if (d_assets->techs[proto_id].tx_intention) {
+		//acquire lock
+		adapter->os_intf_ops->onebox_acquire_sem(&d_assets->tx_access_lock, 0);
+		//printk("In %s Line %d cmn tx is %d\n", __func__, __LINE__, d_assets->common_hal_tx_access);
+		if (d_assets->common_hal_tx_access) {
+			d_assets->techs[proto_id].tx_access = 1;
+			//printk("Setting tx_acces for %d %s %d\n", proto_id, __func__, __LINE__);
+		} else {
+
+#ifdef GPIO_HANDSHAKE
+			if(d_assets->lp_ps_handshake_mode == GPIO_HAND_SHAKE || d_assets->ulp_ps_handshake_mode == GPIO_HAND_SHAKE){
+				gpio_host_tx_intention(adapter,GPIO_HIGH);
+				/* giving tx_access in gpio_host_tx_intention is not good b'se gpio fn doesnt
+				 * know who has requested the acess.
+				 * So returning from abve function if common hal has tx_access the give
+				 * access to requested protocol.
+				 */ 
+				if (d_assets->common_hal_tx_access) {
+					d_assets->techs[proto_id].tx_access = true;
+				}
+			}
+#endif
+		}
+		adapter->os_intf_ops->onebox_release_sem(&d_assets->tx_access_lock);
+		return;
+	} else {
+
+#ifdef GPIO_HANDSHAKE
+		if(d_assets->lp_ps_handshake_mode == GPIO_HAND_SHAKE || d_assets->ulp_ps_handshake_mode == GPIO_HAND_SHAKE){
+			//acquire_lock
+			adapter->os_intf_ops->onebox_acquire_sem(&d_assets->tx_access_lock, 0);
+			if (!protocol_tx_access(d_assets)) {
+				d_assets->common_hal_tx_access = 0;
+				gpio_host_tx_intention(adapter,GPIO_LOW);
+			}
+			//release lock
+			adapter->os_intf_ops->onebox_release_sem(&d_assets->tx_access_lock);
+			return;
+		}
+#else
+		adapter->os_intf_ops->onebox_acquire_sem(&d_assets->tx_access_lock, 0);
+		if (d_assets->sleep_entry_recvd && !d_assets->ulp_sleep_ack_sent) {
+			if (!protocol_tx_access(d_assets)) {
+				d_assets->common_hal_tx_access = 0;
+				printk("In %s Line %d sending ULP sleep_ack\n", __func__, __LINE__);
+				send_ulp_sleep_ack(adapter);
+			} 
+		}
+		adapter->os_intf_ops->onebox_release_sem(&d_assets->tx_access_lock);
+		return;
+#endif
+
+	}
+}
+
+EXPORT_SYMBOL(sleep_entry_recvd);
+EXPORT_SYMBOL(sleep_exit_recvd);
+EXPORT_SYMBOL(update_tx_status);

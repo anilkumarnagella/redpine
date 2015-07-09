@@ -1,0 +1,350 @@
+In file included from ./arch/x86/include/asm/bitops.h:16:0,
+                 from include/linux/bitops.h:33,
+                 from include/linux/kernel.h:10,
+                 from include/linux/plist.h:78,
+                 from include/linux/pm_qos.h:7,
+                 from include/linux/netdevice.h:28,
+                 from /home/in2em/sourcecode/quadchip/riot/RS9113.NBZ.NL.GENR.LNX.1.1.0/source/host/common_hal/include/linux/onebox_common.h:21,
+                 from /home/in2em/sourcecode/quadchip/riot/RS9113.NBZ.NL.GENR.LNX.1.1.0/source/host/common_hal/intfdep/sdio/osd_sdio/linux/onebox_sdio_main_osd.c:17:
+./arch/x86/include/asm/arch_hweight.h: In function ‘__arch_hweight64’:
+./arch/x86/include/asm/arch_hweight.h:53:42: error: expected ‘:’ or ‘)’ before ‘POPCNT64’
+  asm (ALTERNATIVE("call __sw_hweight64", POPCNT64, X86_FEATURE_POPCNT)
+                                          ^
+./arch/x86/include/asm/alternative.h:98:31: note: in definition of macro ‘ALTINSTR_REPLACEMENT’
+  b_replacement(number)":\n\t" newinstr "\n" e_replacement(number) ":\n\t"
+                               ^
+./arch/x86/include/asm/arch_hweight.h:53:7: note: in expansion of macro ‘ALTERNATIVE’
+  asm (ALTERNATIVE("call __sw_hweight64", POPCNT64, X86_FEATURE_POPCNT)
+       ^
+In file included from ./arch/x86/include/asm/segment.h:148:0,
+                 from ./arch/x86/include/asm/ptrace.h:4,
+                 from ./arch/x86/include/asm/alternative.h:8,
+                 from ./arch/x86/include/asm/bitops.h:16,
+                 from include/linux/bitops.h:33,
+                 from include/linux/kernel.h:10,
+                 from include/linux/plist.h:78,
+                 from include/linux/pm_qos.h:7,
+                 from include/linux/netdevice.h:28,
+                 from /home/in2em/sourcecode/quadchip/riot/RS9113.NBZ.NL.GENR.LNX.1.1.0/source/host/common_hal/include/linux/onebox_common.h:21,
+                 from /home/in2em/sourcecode/quadchip/riot/RS9113.NBZ.NL.GENR.LNX.1.1.0/source/host/common_hal/intfdep/sdio/osd_sdio/linux/onebox_sdio_main_osd.c:17:
+./arch/x86/include/asm/processor.h: At top level:
+./arch/x86/include/asm/cache.h:7:25: error: ‘CONFIG_X86_L1_CACHE_SHIFT’ undeclared here (not in a function)
+ #define L1_CACHE_SHIFT (CONFIG_X86_L1_CACHE_SHIFT)
+                         ^
+./arch/x86/include/asm/cache.h:8:30: note: in expansion of macro ‘L1_CACHE_SHIFT’
+ #define L1_CACHE_BYTES (1 << L1_CACHE_SHIFT)
+                              ^
+include/linux/cache.h:12:25: note: in expansion of macro ‘L1_CACHE_BYTES’
+ #define SMP_CACHE_BYTES L1_CACHE_BYTES
+                         ^
+./arch/x86/include/asm/processor.h:131:30: note: in expansion of macro ‘SMP_CACHE_BYTES’
+ } __attribute__((__aligned__(SMP_CACHE_BYTES)));
+                              ^
+In file included from ./arch/x86/include/asm/atomic.h:6:0,
+                 from include/linux/atomic.h:4,
+                 from include/linux/debug_locks.h:5,
+                 from include/linux/lockdep.h:23,
+                 from include/linux/spinlock_types.h:18,
+                 from include/linux/mutex.h:15,
+                 from include/linux/notifier.h:13,
+                 from include/linux/pm_qos.h:8,
+                 from include/linux/netdevice.h:28,
+                 from /home/in2em/sourcecode/quadchip/riot/RS9113.NBZ.NL.GENR.LNX.1.1.0/source/host/common_hal/include/linux/onebox_common.h:21,
+                 from /home/in2em/sourcecode/quadchip/riot/RS9113.NBZ.NL.GENR.LNX.1.1.0/source/host/common_hal/intfdep/sdio/osd_sdio/linux/onebox_sdio_main_osd.c:17:
+./arch/x86/include/asm/processor.h:131:1: error: requested alignment is not an integer constant
+ } __attribute__((__aligned__(SMP_CACHE_BYTES)));
+ ^
+In file included from include/asm-generic/percpu.h:6:0,
+                 from ./arch/x86/include/asm/percpu.h:523,
+                 from ./arch/x86/include/asm/current.h:5,
+                 from include/linux/mutex.h:13,
+                 from include/linux/notifier.h:13,
+                 from include/linux/pm_qos.h:8,
+                 from include/linux/netdevice.h:28,
+                 from /home/in2em/sourcecode/quadchip/riot/RS9113.NBZ.NL.GENR.LNX.1.1.0/source/host/common_hal/include/linux/onebox_common.h:21,
+                 from /home/in2em/sourcecode/quadchip/riot/RS9113.NBZ.NL.GENR.LNX.1.1.0/source/host/common_hal/intfdep/sdio/osd_sdio/linux/onebox_sdio_main_osd.c:17:
+./arch/x86/include/asm/processor.h:155:39: error: requested alignment is not an integer constant
+ DECLARE_PER_CPU_SHARED_ALIGNED(struct cpuinfo_x86, cpu_info);
+                                       ^
+include/linux/percpu-defs.h:80:38: note: in definition of macro ‘DECLARE_PER_CPU_SECTION’
+  extern __PCPU_ATTRS(sec) __typeof__(type) name
+                                      ^
+./arch/x86/include/asm/processor.h:155:1: note: in expansion of macro ‘DECLARE_PER_CPU_SHARED_ALIGNED’
+ DECLARE_PER_CPU_SHARED_ALIGNED(struct cpuinfo_x86, cpu_info);
+ ^
+In file included from ./arch/x86/include/asm/atomic.h:6:0,
+                 from include/linux/atomic.h:4,
+                 from include/linux/debug_locks.h:5,
+                 from include/linux/lockdep.h:23,
+                 from include/linux/spinlock_types.h:18,
+                 from include/linux/mutex.h:15,
+                 from include/linux/notifier.h:13,
+                 from include/linux/pm_qos.h:8,
+                 from include/linux/netdevice.h:28,
+                 from /home/in2em/sourcecode/quadchip/riot/RS9113.NBZ.NL.GENR.LNX.1.1.0/source/host/common_hal/include/linux/onebox_common.h:21,
+                 from /home/in2em/sourcecode/quadchip/riot/RS9113.NBZ.NL.GENR.LNX.1.1.0/source/host/common_hal/intfdep/sdio/osd_sdio/linux/onebox_sdio_main_osd.c:17:
+./arch/x86/include/asm/processor.h:164:0: warning: "cache_line_size" redefined [enabled by default]
+ #define cache_line_size() (boot_cpu_data.x86_cache_alignment)
+ ^
+In file included from include/linux/printk.h:8:0,
+                 from include/linux/kernel.h:13,
+                 from include/linux/plist.h:78,
+                 from include/linux/pm_qos.h:7,
+                 from include/linux/netdevice.h:28,
+                 from /home/in2em/sourcecode/quadchip/riot/RS9113.NBZ.NL.GENR.LNX.1.1.0/source/host/common_hal/include/linux/onebox_common.h:21,
+                 from /home/in2em/sourcecode/quadchip/riot/RS9113.NBZ.NL.GENR.LNX.1.1.0/source/host/common_hal/intfdep/sdio/osd_sdio/linux/onebox_sdio_main_osd.c:17:
+include/linux/cache.h:64:0: note: this is the location of the previous definition
+ #define cache_line_size() L1_CACHE_BYTES
+ ^
+In file included from ./arch/x86/include/asm/atomic.h:6:0,
+                 from include/linux/atomic.h:4,
+                 from include/linux/debug_locks.h:5,
+                 from include/linux/lockdep.h:23,
+                 from include/linux/spinlock_types.h:18,
+                 from include/linux/mutex.h:15,
+                 from include/linux/notifier.h:13,
+                 from include/linux/pm_qos.h:8,
+                 from include/linux/netdevice.h:28,
+                 from /home/in2em/sourcecode/quadchip/riot/RS9113.NBZ.NL.GENR.LNX.1.1.0/source/host/common_hal/include/linux/onebox_common.h:21,
+                 from /home/in2em/sourcecode/quadchip/riot/RS9113.NBZ.NL.GENR.LNX.1.1.0/source/host/common_hal/intfdep/sdio/osd_sdio/linux/onebox_sdio_main_osd.c:17:
+./arch/x86/include/asm/processor.h:253:1: error: requested alignment is not an integer constant
+ } __attribute__((packed)) ____cacheline_aligned;
+ ^
+./arch/x86/include/asm/processor.h:284:1: error: requested alignment is not an integer constant
+ } ____cacheline_aligned;
+ ^
+In file included from include/asm-generic/percpu.h:6:0,
+                 from ./arch/x86/include/asm/percpu.h:523,
+                 from ./arch/x86/include/asm/current.h:5,
+                 from include/linux/mutex.h:13,
+                 from include/linux/notifier.h:13,
+                 from include/linux/pm_qos.h:8,
+                 from include/linux/netdevice.h:28,
+                 from /home/in2em/sourcecode/quadchip/riot/RS9113.NBZ.NL.GENR.LNX.1.1.0/source/host/common_hal/include/linux/onebox_common.h:21,
+                 from /home/in2em/sourcecode/quadchip/riot/RS9113.NBZ.NL.GENR.LNX.1.1.0/source/host/common_hal/intfdep/sdio/osd_sdio/linux/onebox_sdio_main_osd.c:17:
+./arch/x86/include/asm/processor.h:286:39: error: requested alignment is not an integer constant
+ DECLARE_PER_CPU_SHARED_ALIGNED(struct tss_struct, init_tss);
+                                       ^
+include/linux/percpu-defs.h:80:38: note: in definition of macro ‘DECLARE_PER_CPU_SECTION’
+  extern __PCPU_ATTRS(sec) __typeof__(type) name
+                                      ^
+./arch/x86/include/asm/processor.h:286:1: note: in expansion of macro ‘DECLARE_PER_CPU_SHARED_ALIGNED’
+ DECLARE_PER_CPU_SHARED_ALIGNED(struct tss_struct, init_tss);
+ ^
+In file included from ./arch/x86/include/asm/atomic.h:250:0,
+                 from include/linux/atomic.h:4,
+                 from include/linux/debug_locks.h:5,
+                 from include/linux/lockdep.h:23,
+                 from include/linux/spinlock_types.h:18,
+                 from include/linux/mutex.h:15,
+                 from include/linux/notifier.h:13,
+                 from include/linux/pm_qos.h:8,
+                 from include/linux/netdevice.h:28,
+                 from /home/in2em/sourcecode/quadchip/riot/RS9113.NBZ.NL.GENR.LNX.1.1.0/source/host/common_hal/include/linux/onebox_common.h:21,
+                 from /home/in2em/sourcecode/quadchip/riot/RS9113.NBZ.NL.GENR.LNX.1.1.0/source/host/common_hal/intfdep/sdio/osd_sdio/linux/onebox_sdio_main_osd.c:17:
+./arch/x86/include/asm/atomic64_64.h:19:1: error: unknown type name ‘atomic64_t’
+ static inline long atomic64_read(const atomic64_t *v)
+ ^
+./arch/x86/include/asm/atomic64_64.h: In function ‘atomic64_read’:
+./arch/x86/include/asm/atomic64_64.h:21:32: error: request for member ‘counter’ in something not a structure or union
+  return (*(volatile long *)&(v)->counter);
+                                ^
+./arch/x86/include/asm/atomic64_64.h: At top level:
+./arch/x86/include/asm/atomic64_64.h:31:33: error: unknown type name ‘atomic64_t’
+ static inline void atomic64_set(atomic64_t *v, long i)
+                                 ^
+./arch/x86/include/asm/atomic64_64.h:43:41: error: unknown type name ‘atomic64_t’
+ static inline void atomic64_add(long i, atomic64_t *v)
+                                         ^
+./arch/x86/include/asm/atomic64_64.h:57:41: error: unknown type name ‘atomic64_t’
+ static inline void atomic64_sub(long i, atomic64_t *v)
+                                         ^
+./arch/x86/include/asm/atomic64_64.h:73:49: error: unknown type name ‘atomic64_t’
+ static inline int atomic64_sub_and_test(long i, atomic64_t *v)
+                                                 ^
+./arch/x86/include/asm/atomic64_64.h:84:33: error: unknown type name ‘atomic64_t’
+ static inline void atomic64_inc(atomic64_t *v)
+                                 ^
+./arch/x86/include/asm/atomic64_64.h:97:33: error: unknown type name ‘atomic64_t’
+ static inline void atomic64_dec(atomic64_t *v)
+                                 ^
+./arch/x86/include/asm/atomic64_64.h:112:41: error: unknown type name ‘atomic64_t’
+ static inline int atomic64_dec_and_test(atomic64_t *v)
+                                         ^
+./arch/x86/include/asm/atomic64_64.h:125:41: error: unknown type name ‘atomic64_t’
+ static inline int atomic64_inc_and_test(atomic64_t *v)
+                                         ^
+./arch/x86/include/asm/atomic64_64.h:139:49: error: unknown type name ‘atomic64_t’
+ static inline int atomic64_add_negative(long i, atomic64_t *v)
+                                                 ^
+./arch/x86/include/asm/atomic64_64.h:151:48: error: unknown type name ‘atomic64_t’
+ static inline long atomic64_add_return(long i, atomic64_t *v)
+                                                ^
+./arch/x86/include/asm/atomic64_64.h:156:48: error: unknown type name ‘atomic64_t’
+ static inline long atomic64_sub_return(long i, atomic64_t *v)
+                                                ^
+./arch/x86/include/asm/atomic64_64.h:164:37: error: unknown type name ‘atomic64_t’
+ static inline long atomic64_cmpxchg(atomic64_t *v, long old, long new)
+                                     ^
+./arch/x86/include/asm/atomic64_64.h:169:34: error: unknown type name ‘atomic64_t’
+ static inline long atomic64_xchg(atomic64_t *v, long new)
+                                  ^
+./arch/x86/include/asm/atomic64_64.h:183:39: error: unknown type name ‘atomic64_t’
+ static inline int atomic64_add_unless(atomic64_t *v, long a, long u)
+                                       ^
+./arch/x86/include/asm/atomic64_64.h:207:45: error: unknown type name ‘atomic64_t’
+ static inline long atomic64_dec_if_positive(atomic64_t *v)
+                                             ^
+In file included from include/linux/atomic.h:165:0,
+                 from include/linux/debug_locks.h:5,
+                 from include/linux/lockdep.h:23,
+                 from include/linux/spinlock_types.h:18,
+                 from include/linux/mutex.h:15,
+                 from include/linux/notifier.h:13,
+                 from include/linux/pm_qos.h:8,
+                 from include/linux/netdevice.h:28,
+                 from /home/in2em/sourcecode/quadchip/riot/RS9113.NBZ.NL.GENR.LNX.1.1.0/source/host/common_hal/include/linux/onebox_common.h:21,
+                 from /home/in2em/sourcecode/quadchip/riot/RS9113.NBZ.NL.GENR.LNX.1.1.0/source/host/common_hal/intfdep/sdio/osd_sdio/linux/onebox_sdio_main_osd.c:17:
+include/asm-generic/atomic64.h:21:18: error: conflicting types for ‘atomic64_read’
+ extern long long atomic64_read(const atomic64_t *v);
+                  ^
+In file included from ./arch/x86/include/asm/atomic.h:250:0,
+                 from include/linux/atomic.h:4,
+                 from include/linux/debug_locks.h:5,
+                 from include/linux/lockdep.h:23,
+                 from include/linux/spinlock_types.h:18,
+                 from include/linux/mutex.h:15,
+                 from include/linux/notifier.h:13,
+                 from include/linux/pm_qos.h:8,
+                 from include/linux/netdevice.h:28,
+                 from /home/in2em/sourcecode/quadchip/riot/RS9113.NBZ.NL.GENR.LNX.1.1.0/source/host/common_hal/include/linux/onebox_common.h:21,
+                 from /home/in2em/sourcecode/quadchip/riot/RS9113.NBZ.NL.GENR.LNX.1.1.0/source/host/common_hal/intfdep/sdio/osd_sdio/linux/onebox_sdio_main_osd.c:17:
+./arch/x86/include/asm/atomic64_64.h:19:20: note: previous definition of ‘atomic64_read’ was here
+ static inline long atomic64_read(const atomic64_t *v)
+                    ^
+In file included from include/linux/atomic.h:165:0,
+                 from include/linux/debug_locks.h:5,
+                 from include/linux/lockdep.h:23,
+                 from include/linux/spinlock_types.h:18,
+                 from include/linux/mutex.h:15,
+                 from include/linux/notifier.h:13,
+                 from include/linux/pm_qos.h:8,
+                 from include/linux/netdevice.h:28,
+                 from /home/in2em/sourcecode/quadchip/riot/RS9113.NBZ.NL.GENR.LNX.1.1.0/source/host/common_hal/include/linux/onebox_common.h:21,
+                 from /home/in2em/sourcecode/quadchip/riot/RS9113.NBZ.NL.GENR.LNX.1.1.0/source/host/common_hal/intfdep/sdio/osd_sdio/linux/onebox_sdio_main_osd.c:17:
+include/asm-generic/atomic64.h:34:0: warning: "atomic64_inc_return" redefined [enabled by default]
+ #define atomic64_inc_return(v)  atomic64_add_return(1LL, (v))
+ ^
+In file included from ./arch/x86/include/asm/atomic.h:250:0,
+                 from include/linux/atomic.h:4,
+                 from include/linux/debug_locks.h:5,
+                 from include/linux/lockdep.h:23,
+                 from include/linux/spinlock_types.h:18,
+                 from include/linux/mutex.h:15,
+                 from include/linux/notifier.h:13,
+                 from include/linux/pm_qos.h:8,
+                 from include/linux/netdevice.h:28,
+                 from /home/in2em/sourcecode/quadchip/riot/RS9113.NBZ.NL.GENR.LNX.1.1.0/source/host/common_hal/include/linux/onebox_common.h:21,
+                 from /home/in2em/sourcecode/quadchip/riot/RS9113.NBZ.NL.GENR.LNX.1.1.0/source/host/common_hal/intfdep/sdio/osd_sdio/linux/onebox_sdio_main_osd.c:17:
+./arch/x86/include/asm/atomic64_64.h:161:0: note: this is the location of the previous definition
+ #define atomic64_inc_return(v)  (atomic64_add_return(1, (v)))
+ ^
+In file included from include/linux/atomic.h:165:0,
+                 from include/linux/debug_locks.h:5,
+                 from include/linux/lockdep.h:23,
+                 from include/linux/spinlock_types.h:18,
+                 from include/linux/mutex.h:15,
+                 from include/linux/notifier.h:13,
+                 from include/linux/pm_qos.h:8,
+                 from include/linux/netdevice.h:28,
+                 from /home/in2em/sourcecode/quadchip/riot/RS9113.NBZ.NL.GENR.LNX.1.1.0/source/host/common_hal/include/linux/onebox_common.h:21,
+                 from /home/in2em/sourcecode/quadchip/riot/RS9113.NBZ.NL.GENR.LNX.1.1.0/source/host/common_hal/intfdep/sdio/osd_sdio/linux/onebox_sdio_main_osd.c:17:
+include/asm-generic/atomic64.h:38:0: warning: "atomic64_dec_return" redefined [enabled by default]
+ #define atomic64_dec_return(v)  atomic64_sub_return(1LL, (v))
+ ^
+In file included from ./arch/x86/include/asm/atomic.h:250:0,
+                 from include/linux/atomic.h:4,
+                 from include/linux/debug_locks.h:5,
+                 from include/linux/lockdep.h:23,
+                 from include/linux/spinlock_types.h:18,
+                 from include/linux/mutex.h:15,
+                 from include/linux/notifier.h:13,
+                 from include/linux/pm_qos.h:8,
+                 from include/linux/netdevice.h:28,
+                 from /home/in2em/sourcecode/quadchip/riot/RS9113.NBZ.NL.GENR.LNX.1.1.0/source/host/common_hal/include/linux/onebox_common.h:21,
+                 from /home/in2em/sourcecode/quadchip/riot/RS9113.NBZ.NL.GENR.LNX.1.1.0/source/host/common_hal/intfdep/sdio/osd_sdio/linux/onebox_sdio_main_osd.c:17:
+./arch/x86/include/asm/atomic64_64.h:162:0: note: this is the location of the previous definition
+ #define atomic64_dec_return(v)  (atomic64_sub_return(1, (v)))
+ ^
+In file included from include/linux/atomic.h:165:0,
+                 from include/linux/debug_locks.h:5,
+                 from include/linux/lockdep.h:23,
+                 from include/linux/spinlock_types.h:18,
+                 from include/linux/mutex.h:15,
+                 from include/linux/notifier.h:13,
+                 from include/linux/pm_qos.h:8,
+                 from include/linux/netdevice.h:28,
+                 from /home/in2em/sourcecode/quadchip/riot/RS9113.NBZ.NL.GENR.LNX.1.1.0/source/host/common_hal/include/linux/onebox_common.h:21,
+                 from /home/in2em/sourcecode/quadchip/riot/RS9113.NBZ.NL.GENR.LNX.1.1.0/source/host/common_hal/intfdep/sdio/osd_sdio/linux/onebox_sdio_main_osd.c:17:
+include/asm-generic/atomic64.h:40:0: warning: "atomic64_inc_not_zero" redefined [enabled by default]
+ #define atomic64_inc_not_zero(v)  atomic64_add_unless((v), 1LL, 0LL)
+ ^
+In file included from ./arch/x86/include/asm/atomic.h:250:0,
+                 from include/linux/atomic.h:4,
+                 from include/linux/debug_locks.h:5,
+                 from include/linux/lockdep.h:23,
+                 from include/linux/spinlock_types.h:18,
+                 from include/linux/mutex.h:15,
+                 from include/linux/notifier.h:13,
+                 from include/linux/pm_qos.h:8,
+                 from include/linux/netdevice.h:28,
+                 from /home/in2em/sourcecode/quadchip/riot/RS9113.NBZ.NL.GENR.LNX.1.1.0/source/host/common_hal/include/linux/onebox_common.h:21,
+                 from /home/in2em/sourcecode/quadchip/riot/RS9113.NBZ.NL.GENR.LNX.1.1.0/source/host/common_hal/intfdep/sdio/osd_sdio/linux/onebox_sdio_main_osd.c:17:
+./arch/x86/include/asm/atomic64_64.h:198:0: note: this is the location of the previous definition
+ #define atomic64_inc_not_zero(v) atomic64_add_unless((v), 1, 0)
+ ^
+In file included from ./arch/x86/include/asm/segment.h:148:0,
+                 from ./arch/x86/include/asm/ptrace.h:4,
+                 from ./arch/x86/include/asm/alternative.h:8,
+                 from ./arch/x86/include/asm/bitops.h:16,
+                 from include/linux/bitops.h:33,
+                 from include/linux/kernel.h:10,
+                 from include/linux/plist.h:78,
+                 from include/linux/pm_qos.h:7,
+                 from include/linux/netdevice.h:28,
+                 from /home/in2em/sourcecode/quadchip/riot/RS9113.NBZ.NL.GENR.LNX.1.1.0/source/host/common_hal/include/linux/onebox_common.h:21,
+                 from /home/in2em/sourcecode/quadchip/riot/RS9113.NBZ.NL.GENR.LNX.1.1.0/source/host/common_hal/intfdep/sdio/osd_sdio/linux/onebox_sdio_main_osd.c:17:
+./arch/x86/include/asm/cache.h:12:31: error: ‘CONFIG_X86_INTERNODE_CACHE_SHIFT’ undeclared here (not in a function)
+ #define INTERNODE_CACHE_SHIFT CONFIG_X86_INTERNODE_CACHE_SHIFT
+                               ^
+include/linux/cache.h:57:35: note: in expansion of macro ‘INTERNODE_CACHE_SHIFT’
+  __attribute__((__aligned__(1 << (INTERNODE_CACHE_SHIFT))))
+                                   ^
+include/linux/mmzone.h:108:3: note: in expansion of macro ‘____cacheline_internodealigned_in_smp’
+ } ____cacheline_internodealigned_in_smp;
+   ^
+In file included from include/linux/gfp.h:5:0,
+                 from include/linux/device.h:29,
+                 from include/linux/pm_qos.h:10,
+                 from include/linux/netdevice.h:28,
+                 from /home/in2em/sourcecode/quadchip/riot/RS9113.NBZ.NL.GENR.LNX.1.1.0/source/host/common_hal/include/linux/onebox_common.h:21,
+                 from /home/in2em/sourcecode/quadchip/riot/RS9113.NBZ.NL.GENR.LNX.1.1.0/source/host/common_hal/intfdep/sdio/osd_sdio/linux/onebox_sdio_main_osd.c:17:
+include/linux/mmzone.h:108:1: error: requested alignment is not an integer constant
+ } ____cacheline_internodealigned_in_smp;
+ ^
+include/linux/mmzone.h:517:1: error: requested alignment is not an integer constant
+ } ____cacheline_internodealigned_in_smp;
+ ^
+In file included from include/linux/scatterlist.h:10:0,
+                 from include/linux/dmaengine.h:28,
+                 from include/linux/netdevice.h:38,
+                 from /home/in2em/sourcecode/quadchip/riot/RS9113.NBZ.NL.GENR.LNX.1.1.0/source/host/common_hal/include/linux/onebox_common.h:21,
+                 from /home/in2em/sourcecode/quadchip/riot/RS9113.NBZ.NL.GENR.LNX.1.1.0/source/host/common_hal/intfdep/sdio/osd_sdio/linux/onebox_sdio_main_osd.c:17:
+./arch/x86/include/asm/io.h:42:31: fatal error: asm/early_ioremap.h: No such file or directory
+ #include <asm/early_ioremap.h>
+                               ^
+compilation terminated.
+make[3]: *** [/home/in2em/sourcecode/quadchip/riot/RS9113.NBZ.NL.GENR.LNX.1.1.0/source/host/common_hal/intfdep/sdio/osd_sdio/linux/onebox_sdio_main_osd.o] Error 1
+make[2]: *** [_module_/home/in2em/sourcecode/quadchip/riot/RS9113.NBZ.NL.GENR.LNX.1.1.0/source/host/common_hal] Error 2
+make[1]: *** [all] Error 2
+make: *** [obx_common_hal] Error 2

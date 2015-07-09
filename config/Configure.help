@@ -1,0 +1,13 @@
+CONFIG_X86_PLATFORM : To Compile the driver for X86 PC/Laptop
+CONFIG_IMX_PLATFORM : To Compile the driver for IMX platform
+AMPDU_AGGR_SUPPORT : To enable ampdu aggregation support
+ONEBOX_DEBUG_ENABLE : To enable debugging support 
+CHIP_ENABLED : To enable the chip based BB/RF programming values
+AUTO_RATE_SUPPORT : To enable auto rate support
+EEPROM_READ_EN : To enable the EEPROM READ support
+RSI_SDIO_MULTI_BLOCK_SUPPORT : To support block transfers in SDIO
+SECURITY_SUPPORT : To support security modes like WEP, WPA-PSK, WPA2-PSK
+ENABLE_P2P_SUPPORT : To enable peer to peer support
+ENABLE_PER_MODE : To enable PER mode
+IEEE80211_AMPDU_AGE  : To enable ampdu age timeouts
+
